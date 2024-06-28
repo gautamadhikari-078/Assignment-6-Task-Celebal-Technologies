@@ -1,0 +1,95 @@
+{
+    "name": "CopyFromFTP",
+    "type": "Copy",
+    "inputs": [
+      {
+        "referenceName": "FTP_Dataset",
+        "type": "DatasetReference"
+      }
+    ],
+    "outputs": [
+      {
+        "referenceName": "AzureBlobSink",
+        "type": "DatasetReference"
+      }
+    ],
+    "typeProperties": {
+      "source": {
+        "type": "FileSystemSource"
+      },
+      "sink": {
+        "type": "BlobSink"
+      }
+    }
+  }
+
+
+  {
+    "name": "IncrementalLoad",
+    "type": "Copy",
+    "inputs": [
+      {
+        "referenceName": "SourceDataset",
+        "type": "DatasetReference"
+      }
+    ],
+    "outputs": [
+      {
+        "referenceName": "SinkDataset",
+        "type": "DatasetReference"
+      }
+    ],
+    "typeProperties": {
+      "source": {
+        "type": "FileSystemSource",
+        "query": {
+          "modifiedDate": {
+            "greaterThan": "@pipeline().parameters.lastModifiedDate"
+          }
+        }
+      },
+      "sink": {
+        "type": "BlobSink"
+      },
+      "enableStaging": false
+    }
+  }
+
+  
+
+  {
+    "name": "lastModifiedDate",
+    "type": "String",
+    "defaultValue": "@utcnow()",
+    "typeProperties": {
+      "isParameter": true
+    }
+  }
+
+  
+
+
+  {
+    "name": "DailyTrigger",
+    "properties": {
+      "runtimeState": "Started",
+      "pipelines": [
+        {
+          "pipelineReference": {
+            "referenceName": "<PipelineName>",
+            "type": "PipelineReference"
+          },
+          "parameters": {
+            "lastModifiedDate": "@trigger().scheduledTime"
+          }
+        }
+      ],
+      "type": "ScheduleTrigger",
+      "recurrence": {
+        "frequency": "Day",
+        "interval": 1
+      }
+    }
+  }
+  
+  

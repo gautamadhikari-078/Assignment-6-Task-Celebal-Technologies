@@ -1,0 +1,18 @@
+{
+    "name": "FTP_LinkedService",
+    "type": "Ftp",
+    "typeProperties": {
+      "host": "<ftp_server_hostname>",
+      "port": 21,
+      "userName": "<ftp_username>",
+      "password": {
+        "type": "SecureString",
+        "value": "<ftp_password>"
+      }
+    },
+    "connectVia": {
+      "referenceName": "<self_hosted_ir_name>",
+      "type": "SelfHosted"
+    }
+  }
+  

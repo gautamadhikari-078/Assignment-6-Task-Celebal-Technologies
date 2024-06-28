@@ -1,0 +1,159 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Calibri;}}
+{\*\generator Riched20 10.0.18362}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\qc\f0\fs56\lang9 Assignment 6 \par
+
+\pard\sa200\sl276\slmult1\b\fs24 Task 1 : Configure Self-hosted integration runtime to Extract the data from your local server and load it into azure DB?\b0\par
+Sol:\par
+\b\fs22 Install and Configure Self-hosted Integration Runtime (IR):\par
+Install IR: \b0 Install the Self-hosted Integration Runtime on a local machine that can connect to your local server and has internet connectivity to communicate with Azure services.\par
+\b Registration: \b0 Register the Self-hosted IR with your Azure Data Factory instance. This involves generating a registration key from ADF and entering it during the installation/configuration of the IR.\par
+\b Set up Linked Services in Azure Data Factory:\b0\par
+Azure SQL Database Linked Service: Create a Linked Service in Azure Data Factory for your Azure SQL Database where you want to load the data.\par
+\b Example JSON snippet for Azure SQL Database Linked Service:\par
+\b0\{\par
+  "name": "AzureSqlDBLinkedService",\par
+  "type": "AzureSqlDatabase",\par
+  "typeProperties": \{\par
+    "connectionString": "<your_connection_string>"\par
+  \},\par
+  "connectVia": \{\par
+    "referenceName": "<self_hosted_ir_name>",\par
+    "type": "SelfHosted"\par
+  \}\par
+\}\par
+\b\fs28 Create Data Pipelines\b0 :\fs22\par
+\b Copy Data Activity\b0 : Create a Data Pipeline in Azure Data Factory that includes a Copy Data activity.\par
+\b Source: \b0 Configure the source dataset to connect to your local server. Use the Self-hosted IR to connect securely.\par
+\b Sink: \b0 Configure the sink dataset to connect to your Azure SQL Database Linked Service.\par
+\b Example JSON snippet for Copy Data Activity\b0 :\par
+\{\par
+  "name": "CopyDataActivity",\par
+  "type": "Copy",\par
+  "inputs": [\par
+    \{\par
+      "referenceName": "<local_server_dataset>",\par
+      "type": "DatasetReference"\par
+    \}\par
+  ],\par
+  "outputs": [\par
+    \{\par
+      "referenceName": "AzureSqlDBLinkedService",\par
+      "type": "DatasetReference"\par
+    \}\par
+  ],\par
+  "typeProperties": \{\par
+    "source": \{\par
+      "type": "SqlSource"\par
+    \},\par
+    "sink": \{\par
+      "type": "SqlSink"\par
+    \}\par
+  \},\par
+  "activities": []\par
+\}\par
+\b Validation: \b0 Validate your pipeline and ensure all connections and mappings are correct.\par
+\b Execution: \b0 Run the pipeline manually or set up triggers/schedules for automatic execution.\par
+\par
+\par
+\b\fs32 Task 2: Configure FTP/ SFTP server and create a ADF pipeline for data extraction?\b0\fs22\par
+Sol:\par
+Choose an FTP/SFTP Server: You can use various software solutions like FileZilla Server for FTP or OpenSSH for SFTP. Install and configure the server according to your organization's security and access policies.\par
+\b Configure Users and Permissions\b0 :\par
+Create a user account on your FTP/SFTP server with appropriate read permissions to the directories containing the data files.\par
+Ensure firewall rules allow inbound connections to the FTP/SFTP server from Azure Data Factory's IP ranges.\par
+\b Create Azure Data Factory Instance:\b0\par
+If you haven't already, create an Azure Data Factory instance in your Azure subscription.\par
+\b Create Linked Service for FTP/SFTP:\par
+\b0 In Azure Data Factory, create a Linked Service to connect to your FTP/SFTP server.\par
+Depending on whether you're using FTP or SFTP, configure the appropriate settings (e.g., hostname, port, authentication credentials).\par
+\b Publish and Trigger Pipeline:\b0\par
+Publish your changes in Azure Data Factory.\par
+Trigger your pipeline manually for testing or set up a trigger based on a schedule or event.\par
+\b Part 3: Testing and Monitoring\par
+Test Pipeline Execution:\b0\par
+Execute the pipeline to verify that data is extracted from the FTP/SFTP server and loaded into your specified data sink (e.g., Azure Blob Storage).\par
+\b Monitor Pipeline Execution:\b0\par
+Monitor pipeline runs in Azure Data Factory to ensure they complete successfully.\par
+Check logs for any errors or issues that may require troubleshooting.\par
+\b\par
+\fs32 Task 3: Create Incremental load pipeline and automate this on daily basis?\fs22\par
+\b0 Sol: \par
+\b Configure Source and Sink\par
+Source Dataset:\b0\par
+Define a dataset that points to your source data location. This could be a SQL database, a file system, or any other supported source.\par
+Ensure the dataset is configured to handle incremental loads. This typically involves using parameters like modifiedDate or an incrementing column (ID, Timestamp, etc.) to track changes.\par
+\b Sink Dataset:\b0\par
+Define a dataset for your sink, which could be an Azure SQL Database, Azure Blob Storage, or another destination.\par
+Ensure the sink dataset is set up to receive incremental updates efficiently.\par
+\b Copy Data Activity:\b0\par
+Use a Copy Data activity within your pipeline to perform the incremental load.\par
+Configure the source dataset to use parameters or filters that identify new or updated data since the last extraction.\par
+Configure the sink dataset to handle incoming data appropriately (e.g., append data to an existing table).\par
+\b Parameters and Trigger\b0 :\par
+Define pipeline parameters (e.g., lastModifiedDate) to dynamically capture the last extraction timestamp or identifier.\par
+Create a pipeline trigger to execute the incremental load pipeline on a daily basis.\par
+\b Publish Pipeline:\b0\par
+Publish your incremental load pipeline in Azure Data Factory after configuring all necessary components.\par
+\b Monitor Pipeline Runs:\b0\par
+Monitor pipeline runs within Azure Data Factory to ensure they execute successfully.\par
+Check logs and output to verify that only incremental changes are being processed.\par
+\b\fs32 Task 4: Automate a pipline to trigger every last Saturday of the month?\b0\fs22\par
+Sol:\par
+\b Create a Logic App:\b0\par
+Navigate to the Azure portal and create a new Logic App.\par
+\b Trigger Configuration:\b0\par
+Add a Recurrence trigger to the Logic App.\par
+Configure it to run weekly, on Saturdays.\par
+\b Add a Condition:\b0\par
+Within the Logic App workflow, add a condition to check if the current date is within the last 7 days of the month.\par
+This condition checks if today's date is within the last 7 days of the month, which is a simplified approach to check if it's the last Saturday.\par
+\b Call Azure Data Factory Pipeline:\b0\par
+Add an action to call an Azure Data Factory pipeline using the Azure Data Factory connector within Logic Apps.\par
+\b Azure Data Factory Pipeline\b0\par
+\b Create the ADF Pipeline:\b0\par
+Create your data factory pipeline as usual, with activities to perform the required data processing or movement.\par
+\b Step 3: Trigger Logic App from Azure Data Factory\par
+Create a Web Activity in ADF:\b0\par
+Add a Web activity at the end of your ADF pipeline.\par
+Configure it to call the Logic App HTTP trigger URL.\par
+Configure the Logic App Trigger\par
+\b Receive HTTP Request:\b0\par
+Add an HTTP trigger to your Logic App to receive the request from Azure Data Factory.\par
+Proceed with the Workflow:\par
+Once triggered, continue with your Logic App workflow (e.g., running the ADF pipeline).\par
+\b Step 5: Testing and Deployment\par
+Test the Setup:\b0\par
+Test your Logic App and Azure Data Factory pipeline to ensure they trigger and execute correctly based on the last Saturday of the month.\par
+\b Deployment:\b0\par
+Publish your Logic App and Azure Data Factory pipeline configurations once testing is successful.\par
+Considerations\par
+\b Timezone Consideration\b0 : Ensure that the timezone settings in both Logic App and Azure Data Factory align with your requirements.\par
+\b Monitoring\b0 : Monitor both Logic App runs and Azure Data Factory pipeline executions to ensure reliability and correctness.\par
+\par
+\b\fs32 Task 5: Retrieving data. Wait a few seconds and try to cut or copy again?\b0\fs22\par
+Sol:\par
+\b 1. Wait and Retry\b0\par
+Sometimes, the error message "Retrieving data. Wait a few seconds and try to cut or copy again." can occur due to temporary network issues or high server load. Try waiting a few moments and then attempt to cut or copy the data again.\par
+\b\par
+2. Check Network and Server Status\par
+\b0 Ensure that your network connection is stable and that there are no ongoing network issues affecting connectivity to the server or storage location from which you are trying to cut or copy data.\par
+\par
+\b 3. Refresh the Source or Destination\b0\par
+If you are copying or cutting from one location (e.g., a file server, cloud storage) to another, refresh both the source and destination locations to ensure they are up-to-date and accessible.\par
+\par
+\b 4. Clear Clipboard Cache\b0\par
+Sometimes, clearing the clipboard cache can resolve issues related to cutting or copying data. Try clearing your clipboard cache and then attempt to perform the operation again.\par
+\par
+\b 5. Restart Application or Service\b0\par
+If the issue persists, try restarting the application or service from which you are performing the cut or copy operation. This can help refresh any temporary states or connections that might be causing the problem.\par
+\par
+\b 6. Check Permissions\b0\par
+Ensure that you have the necessary permissions to perform the cut or copy operation on the source and destination locations. Lack of permissions can prevent the operation from completing successfully.\par
+\par
+\b 7. Use Alternative Methods\b0\par
+If the issue continues, consider using alternative methods to transfer data, such as using command-line tools (e.g., robocopy for Windows, rsync for Linux), which may provide more detailed error messages and options for troubleshooting.\par
+\par
+\b 8. Contact Support\b0\par
+If none of the above steps resolve the issue, consider contacting technical support for the application or service you are using. They may have specific troubleshooting steps or updates related to the issue you are experiencing.\par
+}
+ 

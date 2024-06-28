@@ -1,0 +1,19 @@
+{
+    "name": "FTP_Dataset",
+    "properties": {
+      "linkedServiceName": {
+        "referenceName": "FTP_LinkedService",
+        "type": "LinkedServiceReference"
+      },
+      "folderPath": "/path/to/data",
+      "file": {
+        "pattern": "*.csv",
+        "recursive": false
+      },
+      "compression": {
+        "type": "None"
+      },
+      "type": "File"
+    }
+  }
+  

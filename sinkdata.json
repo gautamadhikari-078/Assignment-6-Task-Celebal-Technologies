@@ -1,0 +1,19 @@
+{
+    "name": "SinkDataset",
+    "properties": {
+      "linkedServiceName": {
+        "referenceName": "<LinkedServiceName>",
+        "type": "LinkedServiceReference"
+      },
+      "folderPath": "<folderPath>",
+      "file": {
+        "pattern": "*.csv",
+        "recursive": false
+      },
+      "compression": {
+        "type": "None"
+      },
+      "type": "File"
+    }
+  }
+  

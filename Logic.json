@@ -1,0 +1,21 @@
+{
+    "type": "Condition",
+    "inputs": {
+      "left": "@mod(int(div(subtract(ticks(utcNow()), 621355968000000000), 864000000000), 7), 7)",
+      "operator": "equals",
+      "right": 0
+    }
+  }
+  
+
+  {
+    "name": "CallLogicApp",
+    "type": "WebActivity",
+    "dependsOn": [],
+    "userProperties": [],
+    "typeProperties": {
+      "url": "https://<logic_app_url>/",
+      "method": "POST"
+    }
+  }
+  
